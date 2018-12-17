@@ -63,11 +63,11 @@ class DatSegIMX2(DatSegBase):
         """ Initialize FDT segments
         :param smx_data: ...
         """
-        assert isinstance(smx_data, dict), "ERROR -"
+        assert isinstance(smx_data, dict)
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorIMX("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorIMX("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -97,7 +97,7 @@ class DatSegIMX2(DatSegBase):
                     raise InitErrorIMX("{}/DATA: Not a dictionary !".format(self.full_name))
                 for k, v in val.items():
                     if not isinstance(k, str):
-                        raise InitErrorIMX("{}/DATA: Not supported key: {}".format(self.full_name, k))
+                        raise InitErrorIMX("{}/DATA: Not supported property: {}".format(self.full_name, k))
                     k = k.upper()
                     if k in ('STADDR', 'OFFSET', 'IMGVER'):
                         if not isinstance(v, int):
@@ -115,11 +115,11 @@ class DatSegIMX2(DatSegBase):
                         if not isinstance(v, str):
                             raise InitErrorIMX("{}/DATA/{}: Value must be a string !".format(self.full_name, k))
                     else:
-                        raise InitErrorIMX("{}/DATA: Not supported attribute \"{}\"".format(self.full_name, k))
+                        raise InitErrorIMX("{}/DATA: Not supported property name \"{}\"".format(self.full_name, k))
                     self._imx_data[k] = v
 
                 if 'STADDR' not in self._imx_data:
-                    raise InitErrorIMX()
+                    raise InitErrorIMX("{}/DATA: STADDR property must be defined !".format(self.full_name))
                 if 'OFFSET' not in self._imx_data:
                     self._imx_data['OFFSET'] = 0x400
                 if 'PLUGIN' not in self._imx_data:
@@ -127,12 +127,10 @@ class DatSegIMX2(DatSegBase):
                 if 'IMGVER' not in self._imx_data:
                     self._imx_data['IMGVER'] = 0x41
                 if 'APPSEG' not in self._imx_data:
-                    raise InitErrorIMX()
+                    raise InitErrorIMX("{}/DATA: APPSEG property must be defined !".format(self.full_name))
 
         if self.path is None and not self._imx_data:
-            raise InitErrorIMX()
-        if self._imx_data and ('STADDR' not in self._imx_data or 'APPSEG' not in self._imx_data):
-            raise InitErrorIMX()
+            raise InitErrorIMX("{}: FILE or DATA property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ load DCD segments
@@ -306,22 +304,22 @@ class DatSegIMX3(DatSegBase):
                     self._imx_data[k] = v
                 # ...
                 if 'STADDR' not in self._imx_data:
-                    raise InitErrorIMX()
+                    raise InitErrorIMX("{}/DATA: STADDR property must be defined !".format(self.full_name))
                 if 'OFFSET' not in self._imx_data:
                     self._imx_data['OFFSET'] = 0x400
                 if 'IMGVER' not in self._imx_data:
                     self._imx_data['IMGVER'] = 0x43
 
         if self.path is None and not self._imx_data:
-            raise InitErrorIMX()
+            raise InitErrorIMX("{}: FILE or DATA property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ load DCD segments
         :param db: ...
         :param root_path: ...
         """
-        assert isinstance(db, list), ""
-        assert isinstance(root_path, str), ""
+        assert isinstance(db, list)
+        assert isinstance(root_path, str)
 
         if self._imx_data:
             imx_obj = imx.img.BootImg3b(address=self._imx_data['STADDR'],

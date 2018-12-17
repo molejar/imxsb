@@ -55,7 +55,7 @@ class DatSegUBI(DatSegBase):
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorUBI("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorUBI("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -89,7 +89,7 @@ class DatSegUBI(DatSegBase):
                     raise InitErrorUBI("{}/EVAL: Value must be a string !".format(self.full_name))
                 self._eval = val
             else:
-                raise InitErrorUBI("{}: Not supported attribute \"{}\"".format(self.full_name, key))
+                raise InitErrorUBI("{}: Not supported property name \"{}\"".format(self.full_name, key))
 
         if self.path is None:
             raise InitErrorUBI("{}/FILE: Value must be defined !".format(self.full_name))
@@ -152,7 +152,7 @@ class DatSegUBX(DatSegBase):
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorUBX("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorUBX("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -182,10 +182,10 @@ class DatSegUBX(DatSegBase):
                         raise InitErrorUBX("{}/HEAD: Not supported key: {}".format(self.full_name, k))
                     self._header[k.lower()] = v
             else:
-                raise InitErrorUBX("{}: Not supported attribute \"{}\"".format(self.full_name, key))
+                raise InitErrorUBX("{}: Not supported property name \"{}\"".format(self.full_name, key))
 
         if self.path is None and self._txt_data is None:
-            raise InitErrorUBX("{} FILE or DATA attribute must be defined !".format(self.full_name))
+            raise InitErrorUBX("{} FILE or DATA property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ Load content
@@ -239,19 +239,19 @@ class DatSegUBT(DatSegBase):
         if smx_data is not None:
             self.init(smx_data)
 
-    def init(self, data):
+    def init(self, smx_data):
         """ Initialize UBT segments
-        :param data: ...
+        :param smx_data: ...
         """
-        assert isinstance(data, dict)
+        assert isinstance(smx_data, dict)
 
-        for key, val in data.items():
+        for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorUBT()
+                raise InitErrorUBT("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
-                    raise InitErrorUBT()
+                    raise InitErrorUBT("{}/DESC: Value must be a string !".format(self.full_name))
                 self.description = val
             elif key == 'ADDR':
                 if not isinstance(val, int):
@@ -263,17 +263,17 @@ class DatSegUBT(DatSegBase):
                     self.address = val
             elif key == 'FILE':
                 if not isinstance(val, str):
-                    raise InitErrorUBT()
+                    raise InitErrorUBT("{}/FILE: Value must be a string !".format(self.full_name))
                 self.path = val
             elif key == 'DATA':
                 if not isinstance(val, str):
-                    raise InitErrorUBT()
+                    raise InitErrorUBT("{}/DATA: Value must be a string !".format(self.full_name))
                 self._its_data = val
             else:
-                raise InitErrorUBT()
+                raise InitErrorUBT("{}: Not supported property name \"{}\"".format(self.full_name, key))
 
         if self.path is None and self._its_data is None:
-            raise InitErrorUBT()
+            raise InitErrorUBT("{} FILE or DATA property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ Load content
@@ -284,3 +284,5 @@ class DatSegUBT(DatSegBase):
         assert isinstance(db, list)
         assert isinstance(root_path, str)
 
+        ftd_obj = uboot.parse_its(self._its_data, root_path)
+        self.data = ftd_obj.to_itb()

@@ -39,15 +39,13 @@ def elapsed_time(start_time):
 # Worker class
 class Worker(threading.Thread):
 
-    finish = None
-    logger = None
-    prgbar = None
-
-    def __init__(self, parent, device, script):
+    def __init__(self, device, script, logger, finish, prgbar):
         super().__init__()
-        self._parent = parent
         self._device = device
         self._script = script
+        self._logger = logger
+        self._finish = finish
+        self._prgbar = prgbar
         # internal variables
         self._running = False
         self._pgstp = 0
@@ -57,7 +55,7 @@ class Worker(threading.Thread):
         self._running = False
 
     def progress_handler(self, level):
-        GLib.idle_add(self.prgbar, self._pgval + (self._pgstp / PGRANGE) * level)
+        GLib.idle_add(self._prgbar, self._pgval + (self._pgstp / PGRANGE) * level)
         return self._running
 
     def run(self):
@@ -66,7 +64,7 @@ class Worker(threading.Thread):
         self._device.pg_range = PGRANGE
 
         start_time = time.time()
-        GLib.idle_add(self.logger, " START: {}\n".format(self._script.name))
+        GLib.idle_add(self._logger, " START: {}\n".format(self._script.name))
 
         try:
             # connect target
@@ -80,7 +78,7 @@ class Worker(threading.Thread):
                 self._pgstp = cmd['pg']
 
                 # print command info
-                GLib.idle_add(self.logger, " {} {}\n".format(elapsed_time(start_time), cmd['description']), False)
+                GLib.idle_add(self._logger, " {} {}\n".format(elapsed_time(start_time), cmd['description']), False)
 
                 if cmd['name'] == 'wreg':
                     self._device.write(cmd['address'], cmd['value'], cmd['bytes'])
@@ -100,13 +98,13 @@ class Worker(threading.Thread):
                 else:
                     raise Exception("Command: {} not supported".format(cmd['name']))
 
-            GLib.idle_add(self.prgbar, PGRANGE)
+            GLib.idle_add(self._prgbar, PGRANGE)
 
         except Exception as e:
-            GLib.idle_add(self.finish, " STOP: {}".format(str(e)))
+            GLib.idle_add(self._finish, " STOP: {}".format(str(e)))
 
         else:
-            GLib.idle_add(self.finish, " DONE: Successfully started")
+            GLib.idle_add(self._finish, " DONE: Successfully started")
 
         finally:
             self._device.close()
@@ -383,10 +381,7 @@ class MainWindow(Gtk.Window):
             else:
                 self.hotplug.stop()
 
-                self.worker = Worker(self, device, script)
-                self.worker.finish = self.on_finish
-                self.worker.logger = self.logger
-                self.worker.prgbar = self.pgbar
+                self.worker = Worker(device, script, self.logger, self.on_finish, self.pgbar)
                 self.worker.daemon = True
                 self.worker.start()
 

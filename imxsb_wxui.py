@@ -39,15 +39,13 @@ def elapsed_time(start_time):
 # Worker class
 class Worker(threading.Thread):
 
-    finish = None
-    logger = None
-    prgbar = None
-
-    def __init__(self, parent, device, script):
+    def __init__(self, device, script, logger, finish, prgbar):
         super().__init__()
-        self._parent = parent
         self._device = device
         self._script = script
+        self._logger = logger
+        self._finish = finish
+        self._prgbar = prgbar
         # internal variables
         self._running = False
         self._pgstp = 0
@@ -57,7 +55,7 @@ class Worker(threading.Thread):
         self._running = False
 
     def progress_handler(self, level):
-        wx.CallAfter(self.prgbar, self._pgval + (self._pgstp / PGRANGE) * level)
+        wx.CallAfter(self._prgbar, self._pgval + (self._pgstp / PGRANGE) * level)
         return self._running
 
     def run(self):
@@ -67,7 +65,7 @@ class Worker(threading.Thread):
 
         start_time = time.time()
 
-        wx.CallAfter(self.logger, " START: {}\n".format(self._script.name))
+        wx.CallAfter(self._logger, " START: {}\n".format(self._script.name))
         try:
             # connect target
             self._device.open(self.progress_handler)
@@ -80,7 +78,7 @@ class Worker(threading.Thread):
                 self._pgstp = cmd['pg']
 
                 # print command info
-                wx.CallAfter(self.logger, " {} {}\n".format(elapsed_time(start_time), cmd['description']), False)
+                wx.CallAfter(self._logger, " {} {}\n".format(elapsed_time(start_time), cmd['description']), False)
 
                 if cmd['name'] == 'wreg':
                     self._device.write(cmd['address'], cmd['value'], cmd['bytes'])
@@ -100,14 +98,14 @@ class Worker(threading.Thread):
                 else:
                     raise Exception("Command: {} not supported".format(cmd['name']))
 
-            wx.CallAfter(self.prgbar, PGRANGE)
+            wx.CallAfter(self._prgbar, PGRANGE)
 
         except Exception as e:
-            wx.CallAfter(self.finish, " STOP: {}".format(str(e)))
+            wx.CallAfter(self._finish, " STOP: {}".format(str(e)))
             #wx.GetApp().ProcessPendingEvents()
 
         else:
-             wx.CallAfter(self.finish, " DONE: Successfully started")
+             wx.CallAfter(self._finish, " DONE: Successfully started")
              #wx.GetApp().ProcessPendingEvents()
 
         finally:
@@ -369,10 +367,7 @@ class MainWindow(wx.Frame):
             else:
                 #self.hotplug.stop()
 
-                self.worker = Worker(self, device, script)
-                self.worker.finish = self.OnWorkerFinish
-                self.worker.prgbar = self.ProgressBar
-                self.worker.logger = self.Logger
+                self.worker = Worker(device, script, self.Logger, self.OnWorkerFinish, self.ProgressBar)
                 self.worker.daemon = True
                 self.worker.start()
 

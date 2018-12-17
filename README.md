@@ -24,24 +24,29 @@ Dependencies
 - [Jinja2](https://pypi.python.org/pypi/Jinja2) - A small but fast and easy to use stand-alone template engine.
 - [pyIMX](https://github.com/molejar/pyIMX) - Python module targeted for i.MX Applications Processors.
 - [pyFDT](https://github.com/molejar/pyFDT) - Python package for manipulation with Device Tree images.
-- [pyUBoot](https://github.com/molejar/pyUBoot) - Python package for manipulation with U-Boot images and environment variables..
+- [pyUBoot](https://github.com/molejar/pyUBoot) - Python package for manipulation with U-Boot images and environment variables.
 
 for GUI only:
 
-- [PyGTK](https://pygobject.readthedocs.io/en/latest/) - Python wrapper for the GTK+ graphical user interface library.
+- [PyGObject](https://pygobject.readthedocs.io/en/latest/) - Python wrapper for the GTK+ graphical user interface library.
 - [PyQT5](https://www.riverbankcomputing.com/software/pyqt/intro) - PyQt5 is a comprehensive set of Python bindings for Qt v5.
 - [wxPython](https://wxpython.org/) - Cross-platform GUI toolkit for the Python language.
 
 Installation
 ------------
 
-Just clone it from `https://github.com/molejar/imxsb.git`:
+The standalone executable for Linux and Windows OS are available in [releases](https://github.com/molejar/imxsb/releases) page.
+
+In case of development clone this repo into your PC and install all dependencies:
 
 ``` bash
     $ git clone https://github.com/molejar/imxsb.git
     $ cd imxsb
     $ pip install -r requirements.txt
+    $ pip install PyQT5 wxPython
 ```
+
+>The PyGObject package is not available for Windows OS yet.
 
 Usage
 -----

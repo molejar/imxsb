@@ -41,13 +41,12 @@ def elapsed_time(start_time):
 # Worker class
 class Worker(QThread):
 
-    finish = pyqtSignal(str)
     logger = pyqtSignal(str, int)
+    finish = pyqtSignal(str)
     prgbar = pyqtSignal(int)
 
-    def __init__(self, parent, device, script):
+    def __init__(self, device, script):
         super().__init__()
-        self._parent = parent
         self._device = device
         self._script = script
         # internal variables
@@ -333,9 +332,9 @@ class MainWindow(QFrame):
             else:
                 self.hotplug.stop()
 
-                self.worker = Worker(self, device, script)
-                self.worker.finish.connect(self.on_finish)
+                self.worker = Worker(device, script)
                 self.worker.logger.connect(self.Logger)
+                self.worker.finish.connect(self.on_finish)
                 self.worker.prgbar.connect(self.ProgressBar)
                 self.worker.daemon = True
                 self.worker.start()

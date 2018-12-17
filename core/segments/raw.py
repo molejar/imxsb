@@ -37,7 +37,7 @@ class DatSegRAW(DatSegBase):
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorRAW("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorRAW("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -56,10 +56,10 @@ class DatSegRAW(DatSegBase):
                     raise InitErrorRAW("{}/FILE: Value must be a string !".format(self.full_name))
                 self.path = val
             else:
-                raise InitErrorRAW("{}: Not supported attribute \"{}\" !".format(self.full_name, key))
+                raise InitErrorRAW("{}: Not supported property name \"{}\" !".format(self.full_name, key))
 
         if self.path is None:
-            raise InitErrorRAW()
+            raise InitErrorRAW("{}: FILE property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ Load content

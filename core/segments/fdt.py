@@ -42,7 +42,7 @@ class DatSegFDT(DatSegBase):
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorFDT("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorFDT("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -72,10 +72,10 @@ class DatSegFDT(DatSegBase):
                     raise InitErrorFDT("{}/MODE: Not supported value \"{}\"".format(self.full_name, val))
                 self._mode = val
             else:
-                raise InitErrorFDT("{}: Not supported attribute \"{}\" !".format(self.full_name, key))
+                raise InitErrorFDT("{}: Not supported property name \"{}\" !".format(self.full_name, key))
 
         if self.path is None:
-            raise InitErrorFDT("{}/FILE: Value must be defined !".format(self.full_name))
+            raise InitErrorFDT("{}: FILE property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ load DCD segments

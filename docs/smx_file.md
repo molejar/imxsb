@@ -67,8 +67,7 @@ can contain a different type of data what is specified by extension in its name 
 * **UBT** - New format of U-Boot executable image based on FDT (script, firmware, ...)
 * **RAW** - Binary raw image (*.*)
 
-If attribute `TYPE` is not defined the data segments will be processing as binary data (`TYPE: BIN`). Other attributes 
-common for all data segments are:
+Attributes common for all data segments are:
 
 * **DESC** - The description of data segments (optional)
 * **ADDR** - The absolute address inside SoC OCT or DDR memory (optional)
@@ -218,7 +217,7 @@ Example of *UBX* data segments:
 ```
 DATA:      
     uboot_firmware.ubx:
-        DESC: U-Boot FW
+        DESC: U-Boot FW Image
         ADDR: 0x83100000
         FILE: imx7d/u-boot.bin
                  
@@ -232,6 +231,20 @@ DATA:
             setenv autoload 'no'
             dhcp
             ...
+```
+
+##### New format of U-Boot executable image data segment (UBT)
+
+...
+
+Example of *UBT* data segments:
+
+```
+DATA:
+    uboot_executable.ubt:
+        DESC: U-Boot FIT Image
+        ADDR: 0x83100000
+        FILE: imx7d/u-boot.its
 ```
 
 ##### Binary raw image data segment (RAW)

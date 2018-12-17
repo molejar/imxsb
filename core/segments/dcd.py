@@ -43,7 +43,7 @@ class DatSegDCD(DatSegBase):
 
         for key, val in smx_data.items():
             if not isinstance(key, str):
-                raise InitErrorDCD("{}: Key must be a string !".format(self.full_name))
+                raise InitErrorDCD("{}: Property name must be a string !".format(self.full_name))
             key = key.upper()
             if key == 'DESC':
                 if not isinstance(val, str):
@@ -66,10 +66,10 @@ class DatSegDCD(DatSegBase):
                     raise InitErrorDCD("{}/FILE: Value must be a string !".format(self.full_name))
                 self.path = val
             else:
-                raise InitErrorDCD("{}: Not supported attribute \"{}\" !".format(self.full_name, key))
+                raise InitErrorDCD("{}: Not supported property name \"{}\" !".format(self.full_name, key))
 
         if self.path is None and self._txt_data is None:
-            raise InitErrorDCD("{} FILE or DATA attribute must be defined !".format(self.full_name))
+            raise InitErrorDCD("{}: FILE or DATA property must be defined !".format(self.full_name))
 
     def load(self, db, root_path):
         """ load DCD segments
