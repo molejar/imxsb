@@ -48,9 +48,5 @@ Usage
 
 The i.MX SmartBoot tool has standard command line interface and also user friendly GUI.
 
-* [imxsb_cli](docs/imxsb_cli)
-* [imxsb_gui](docs/imxsb_gui)
-
-<p align="center">
-  <img src="docs/images/imxsb_gtkui.png" alt="i.MX SmartBoot Tool GUI: Main window"/>
-</p>
+* [imxsb_cli](docs/imxsb_cli.md)
+* [imxsb_gui](docs/imxsb_gui.md)
