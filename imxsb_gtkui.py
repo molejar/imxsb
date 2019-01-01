@@ -351,12 +351,12 @@ class MainWindow(Gtk.Window):
         # fill the about dialog
         about_dialog.set_title("About")
         about_dialog.set_logo_icon_name("gtk-about")
-        about_dialog.set_program_name("i.MX Smart-Boot Tool")
+        about_dialog.set_program_name("i.MX SmartBoot Tool")
         about_dialog.set_version(core.__version__)
         about_dialog.set_comments(core.DESCRIPTION)
         about_dialog.set_copyright("Copyright \xa9 2018 Martin Olejar")
-        about_dialog.set_website("https://github.com/molejar/i.MX_Smart_Boot")
-        about_dialog.set_website_label("https://github.com/molejar")
+        about_dialog.set_website("https://github.com/molejar/imxsb")
+        about_dialog.set_website_label("https://github.com/molejar/imxsb")
         about_dialog.set_authors(["Martin Olejar"])
         about_dialog.set_documenters(["Martin Olejar"])
         about_dialog.set_license(core.LICENSE)
@@ -387,6 +387,9 @@ class MainWindow(Gtk.Window):
 
                 self.start_button.set_label(" Stop")
                 self.start_button.set_image(Gtk.Image(stock=Gtk.STOCK_MEDIA_STOP))
+                self.scan_button.set_sensitive(False)
+                self.open_button.set_sensitive(False)
+                self.devices_box.set_sensitive(False)
         else:
             self.worker.stop()
 
@@ -394,10 +397,13 @@ class MainWindow(Gtk.Window):
         self.logger(msg, False)
         self.start_button.set_label(" Start")
         self.start_button.set_image(Gtk.Image(stock=Gtk.STOCK_MEDIA_PLAY))
+        self.scan_button.set_sensitive(True)
+        self.open_button.set_sensitive(True)
+        self.devices_box.set_sensitive(True)
         self.hotplug.start()
 
     def on_exit_button_clicked(self, widget):
-        exit()
+        sys.exit(0)
 
 
 def main(argv):

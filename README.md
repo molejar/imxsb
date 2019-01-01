@@ -1,6 +1,8 @@
 i.MX SmartBoot Tool
 ===================
 
+[![Last Release](https://img.shields.io/github/release/molejar/imxsb.svg)](https://github.com/molejar/imxsb/releases)
+
 This tool is usable for managed boot of embedded devices based on i.MX application processors. It fully replaces the
 [imx_loader](https://github.com/boundarydevices/imx_usb_loader) and adds features for an easy modification of binary
 sections in boot images like:
@@ -35,7 +37,8 @@ for GUI only:
 Installation
 ------------
 
-The standalone executable for Linux and Windows OS are available in [releases](https://github.com/molejar/imxsb/releases) page.
+The standalone executables for Windows OS are available in [releases](https://github.com/molejar/imxsb/releases) page. For Linux users
+will exist installation packages later, at this moment use raw sources.
 
 In case of development clone this repo into your PC and install all dependencies:
 
@@ -43,15 +46,35 @@ In case of development clone this repo into your PC and install all dependencies
     $ git clone https://github.com/molejar/imxsb.git
     $ cd imxsb
     $ pip install -r requirements.txt
-    $ pip install PyQT5 wxPython
 ```
 
->The PyGObject package is not available for Windows OS yet.
+For running `imxsb_wxui.py` install `wxPython` package:
+
+``` bash
+    $ pip install wxPython
+```
+
+For running `imxsb_qtui.py` install `PyQT5` package:
+
+``` bash
+    $ pip install PyQT5
+```
+
+For running `imxsb_gtkui.py` install `PyGObject` package:
+
+``` bash
+    $ pip install PyGObject
+```
+
+>The PyGObject package is available only for Linux OS yet.
 
 Usage
 -----
 
-The i.MX SmartBoot tool has standard command line interface and also user friendly GUI.
+The i.MX SmartBoot tool is available int two variants:
 
-* [imxsb_cli](docs/imxsb_cli.md)
-* [imxsb_gui](docs/imxsb_gui.md)
+* [imxsb_cli](docs/imxsb_cli.md) - with standard command line interface
+* [imxsb_gui](docs/imxsb_gui.md) - with user friendly graphical interface
+
+> Linux users can get into device permission issue if run i.MX SmartBoot tool without root privileges (sudo).
+To fix this problem install udev rules distributed with [pyIMX](https://github.com/molejar/pyIMX) package.

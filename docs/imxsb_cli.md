@@ -22,6 +22,8 @@ optional arguments:
   -v, --version         show program's version number and exit
 ```
 
+The user guide how to create input file for i.MX SmartBoot tool is in following link: [SMX file](smx_file.md)
+
 #### Print SMX file info and exit
 
 ```sh

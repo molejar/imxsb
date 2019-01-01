@@ -22,7 +22,6 @@ from PyQt5.QtWidgets import QApplication, QDesktopWidget, QMessageBox, QFileDial
                             QPushButton, QComboBox, QSizePolicy, QLineEdit, QSplitter, QFrame, QListWidget, \
                             QAbstractScrollArea, QTextEdit, QProgressBar, QSpacerItem
 
-
 # Application base directory
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -312,7 +311,7 @@ class MainWindow(QFrame):
         text += "<p>{}".format(core.DESCRIPTION)
         text += "<p>Copyright &copy; 2018 Martin Olejar."
         text += "<p>License: {}".format(core.__license__)
-        text += "<p>Sources: <a href='https://github.com/molejar/i.MX_Smart_Boot'>https://github.com/molejar</a>"
+        text += "<p>Sources: <a href='https://github.com/molejar/imxsb'>https://github.com/molejar/imxsb</a>"
         QMessageBox.about(self, "About", text)
 
     def on_info_button_clicked(self):
@@ -341,6 +340,11 @@ class MainWindow(QFrame):
 
                 self.startButton.setText(" Stop")
                 self.startButton.setIcon(QIcon.fromTheme("media-playback-stop"))
+                self.scanButton.setEnabled(False)
+                self.openButton.setEnabled(False)
+                self.deviceBox.setEnabled(False)
+                self.scriptsList.setEnabled(False)
+
         else:
             self.worker.stop()
             #self.scan_usb()
@@ -349,6 +353,10 @@ class MainWindow(QFrame):
         self.textEdit.append(msg)
         self.startButton.setText(" Start")
         self.startButton.setIcon(QIcon.fromTheme("media-playback-start"))
+        self.scanButton.setEnabled(True)
+        self.openButton.setEnabled(True)
+        self.deviceBox.setEnabled(True)
+        self.scriptsList.setEnabled(True)
         #self.scan_usb()
         self.hotplug.start()
 

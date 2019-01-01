@@ -293,6 +293,9 @@ class MainWindow(wx.Frame):
     def OnWorkerFinish(self, msg):
         self.Logger(msg, False)
         self.start_button.SetLabel("Start")
+        self.scan_button.Enable(True)
+        self.open_button.Enable(True)
+        self.devices_box.Enable(True)
         self.ScanUSB()
         #self.hotplug.start()
 
@@ -333,11 +336,11 @@ class MainWindow(wx.Frame):
         if os.name == 'posix':
             info = wx.adv.AboutDialogInfo()
             #info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
-            info.SetName('i.MX Smart-Boot Tool')
+            info.SetName('i.MX SmartBoot Tool')
             info.SetVersion(core.__version__)
             info.SetDescription(core.DESCRIPTION)
             info.SetCopyright('Copyright \xa9 2018 Martin Olejar')
-            info.SetWebSite('https://github.com/molejar/i.MX_Smart_Boot')
+            info.SetWebSite('https://github.com/molejar/imxsb')
             info.SetLicence(core.LICENSE)
             info.AddDeveloper('Martin Olejar')
             info.AddDocWriter('Martin Olejar')
@@ -372,6 +375,9 @@ class MainWindow(wx.Frame):
                 self.worker.start()
 
                 self.start_button.SetLabel("Stop")
+                self.scan_button.Enable(False)
+                self.open_button.Enable(False)
+                self.devices_box.Enable(False)
 
         else:
             self.worker.stop()
@@ -382,7 +388,7 @@ class MainWindow(wx.Frame):
         event.Skip()
 
     def OnExitButtonClicked(self, event):
-        exit()
+        sys.exit(0)
 
 
 def main(argv):
