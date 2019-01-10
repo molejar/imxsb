@@ -101,12 +101,10 @@ class Worker(threading.Thread):
             wx.CallAfter(self._prgbar, PGRANGE)
 
         except Exception as e:
-            wx.CallAfter(self._finish, " STOP: {}".format(str(e)))
-            #wx.GetApp().ProcessPendingEvents()
+            wx.CallAfter(self._finish, " STOP: {}".format(str(e)), False)
 
         else:
-             wx.CallAfter(self._finish, " DONE: Successfully started")
-             #wx.GetApp().ProcessPendingEvents()
+            wx.CallAfter(self._finish, " DONE: Successfully started", True)
 
         finally:
             self._device.close()
@@ -244,11 +242,11 @@ class MainWindow(wx.Frame):
         self.SetSizer(layout)
         self.Layout()
 
-        self.ScanUSB()
-
         # USB hotplug (Linux only)
-        #self.hotplug.attach(self.scan_usb)
-        #self.hotplug.start()
+        # self.hotplug.attach(self.scan_usb)
+        # self.hotplug.start()
+        # TODO: Fix USB hot-plug
+        self.ScanUSB()
 
     ####################################################################################################################
     # Helper methods
@@ -290,14 +288,17 @@ class MainWindow(wx.Frame):
         splitter.Unbind(wx.EVT_IDLE)
         event.Skip()
 
-    def OnWorkerFinish(self, msg):
+    def OnWorkerFinish(self, msg, done):
         self.Logger(msg, False)
         self.start_button.SetLabel("Start")
         self.scan_button.Enable(True)
         self.open_button.Enable(True)
-        self.devices_box.Enable(True)
-        self.ScanUSB()
-        #self.hotplug.start()
+        self.scriptList.Enable(True)
+        if done:
+            self.devices_box.Clear()
+            self.start_button.Enable(False)
+        else:
+            self.ScanUSB()
 
     ####################################################################################################################
     # Buttons callback methods
@@ -368,8 +369,7 @@ class MainWindow(wx.Frame):
             except Exception as e:
                 self.ShowMesageBox("Script Load Error", str(e), wx.ICON_ERROR)
             else:
-                #self.hotplug.stop()
-
+                # Start Worker
                 self.worker = Worker(device, script, self.Logger, self.OnWorkerFinish, self.ProgressBar)
                 self.worker.daemon = True
                 self.worker.start()
@@ -378,12 +378,12 @@ class MainWindow(wx.Frame):
                 self.scan_button.Enable(False)
                 self.open_button.Enable(False)
                 self.devices_box.Enable(False)
-
+                self.scriptList.Enable(False)
+                self.info_button.Enable(False)
         else:
+            # Stop Worker
             self.worker.stop()
             self.worker.join()
-            self.ScanUSB()
-            #self.hotplug.start()
 
         event.Skip()
 

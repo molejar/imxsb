@@ -19,7 +19,7 @@ import core
 # GTK module
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GLib
+from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 
 # Application base directory
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
@@ -101,10 +101,10 @@ class Worker(threading.Thread):
             GLib.idle_add(self._prgbar, PGRANGE)
 
         except Exception as e:
-            GLib.idle_add(self._finish, " STOP: {}".format(str(e)))
+            GLib.idle_add(self._finish, " STOP: {}".format(str(e)), False)
 
         else:
-            GLib.idle_add(self._finish, " DONE: Successfully started")
+            GLib.idle_add(self._finish, " DONE: Successfully started", True)
 
         finally:
             self._device.close()
@@ -146,10 +146,10 @@ class MainWindow(Gtk.Window):
         box.pack_start(self.devices_box, True, True, 0)
 
         # scan button
-        scan_button = Gtk.Button(label=" Scan", image=Gtk.Image(stock=Gtk.STOCK_UNDO))
-        scan_button.connect("clicked", self.on_scan_button_clicked)
-        scan_button.set_size_request(80, 20)
-        box.pack_start(scan_button, False, True, 0)
+        self.scan_button = Gtk.Button(label=" Scan", image=Gtk.Image(stock=Gtk.STOCK_UNDO))
+        self.scan_button.connect("clicked", self.on_scan_button_clicked)
+        self.scan_button.set_size_request(80, 20)
+        box.pack_start(self.scan_button, False, True, 0)
 
         layout.pack_start(box, False, True, 0)
 
@@ -165,10 +165,10 @@ class MainWindow(Gtk.Window):
         box.pack_start(self.smx_path, True, True, 0)
 
         # open button
-        open_button = Gtk.Button(label=" Open", image=Gtk.Image(stock=Gtk.STOCK_OPEN))
-        open_button.connect("clicked", self.on_open_button_clicked)
-        open_button.set_size_request(80, 20)
-        box.pack_start(open_button, False, True, 0)
+        self.open_button = Gtk.Button(label=" Open", image=Gtk.Image(stock=Gtk.STOCK_OPEN))
+        self.open_button.connect("clicked", self.on_open_button_clicked)
+        self.open_button.set_size_request(80, 20)
+        box.pack_start(self.open_button, False, True, 0)
 
         layout.pack_start(box, False, True, 0)
 
@@ -215,9 +215,6 @@ class MainWindow(Gtk.Window):
         # --------------------------------------------------------------------------------------------------------------
         # Buttons
         # --------------------------------------------------------------------------------------------------------------
-        # separator
-        #layout.pack_start(Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL), False, True, 0)
-
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
 
         # About Button
@@ -250,8 +247,10 @@ class MainWindow(Gtk.Window):
         self.add(layout)
 
         # USB hotplug (Linux only)
-        self.hotplug.attach(self.scan_usb)
-        self.hotplug.start()
+        # self.hotplug.attach(self.scan_usb)
+        # self.hotplug.start()
+        # TODO: Fix USB hot-plug
+        self.scan_usb
 
     ####################################################################################################################
     # Helper methods
@@ -297,9 +296,6 @@ class MainWindow(Gtk.Window):
 
     def pgbar(self, val):
         self.progressbar.set_fraction(val / PGRANGE)
-
-    #def pg_subtask(self, count, val):
-    #    self.pg_stask.set_fraction((1.0 / count) * (val))
 
     ####################################################################################################################
     # Buttons callback methods
@@ -350,7 +346,7 @@ class MainWindow(Gtk.Window):
 
         # fill the about dialog
         about_dialog.set_title("About")
-        about_dialog.set_logo_icon_name("gtk-about")
+        about_dialog.set_logo(GdkPixbuf.Pixbuf.new_from_file(os.path.join(BASEDIR, 'icon.png')))
         about_dialog.set_program_name("i.MX SmartBoot Tool")
         about_dialog.set_version(core.__version__)
         about_dialog.set_comments(core.DESCRIPTION)
@@ -379,8 +375,7 @@ class MainWindow(Gtk.Window):
             except Exception as e:
                 self.show_mesage_box("Script Load Error", str(e), Gtk.MessageType.ERROR)
             else:
-                self.hotplug.stop()
-
+                # Start Worker
                 self.worker = Worker(device, script, self.logger, self.on_finish, self.pgbar)
                 self.worker.daemon = True
                 self.worker.start()
@@ -390,17 +385,23 @@ class MainWindow(Gtk.Window):
                 self.scan_button.set_sensitive(False)
                 self.open_button.set_sensitive(False)
                 self.devices_box.set_sensitive(False)
+                self.treeview.set_sensitive(False)
         else:
+            # Stop Worker
             self.worker.stop()
 
-    def on_finish(self, msg):
+    def on_finish(self, msg, done):
         self.logger(msg, False)
         self.start_button.set_label(" Start")
         self.start_button.set_image(Gtk.Image(stock=Gtk.STOCK_MEDIA_PLAY))
         self.scan_button.set_sensitive(True)
         self.open_button.set_sensitive(True)
-        self.devices_box.set_sensitive(True)
-        self.hotplug.start()
+        self.treeview.set_sensitive(True)
+        if done:
+            self.devices_name.clear()
+            self.start_button.set_sensitive(True)
+        else:
+            self.scan_usb()
 
     def on_exit_button_clicked(self, widget):
         sys.exit(0)

@@ -41,7 +41,7 @@ def elapsed_time(start_time):
 class Worker(QThread):
 
     logger = pyqtSignal(str, int)
-    finish = pyqtSignal(str)
+    finish = pyqtSignal(str, bool)
     prgbar = pyqtSignal(int)
 
     def __init__(self, device, script):
@@ -103,10 +103,10 @@ class Worker(QThread):
             self.prgbar.emit(PGRANGE)
 
         except Exception as e:
-            self.finish.emit(" STOP: {}".format(str(e)))
+            self.finish.emit(" STOP: {}".format(str(e)), False)
 
         else:
-            self.finish.emit(" DONE: Successfully started")
+            self.finish.emit(" DONE: Successfully started", True)
 
         finally:
             self._device.close()
@@ -227,11 +227,11 @@ class MainWindow(QFrame):
         layout.addLayout(box)
         self.setLayout(layout)
 
-        #self.scan_usb()
-
-        # USB hotplug (Linux only)
-        self.hotplug.attach(self.scan_usb)
-        self.hotplug.start()
+        # USB hot-plug (Linux only)
+        # self.hotplug.attach(self.scan_usb)
+        # self.hotplug.start()
+        # TODO: Fix USB hot-plug
+        self.scan_usb()
 
     def center(self):
         # center point of screen
@@ -329,8 +329,7 @@ class MainWindow(QFrame):
             except Exception as e:
                 self.ShowMesageBox("Script Load Error", str(e), QMessageBox.Warning)
             else:
-                self.hotplug.stop()
-
+                # Start Worker
                 self.worker = Worker(device, script)
                 self.worker.logger.connect(self.Logger)
                 self.worker.finish.connect(self.on_finish)
@@ -344,21 +343,23 @@ class MainWindow(QFrame):
                 self.openButton.setEnabled(False)
                 self.deviceBox.setEnabled(False)
                 self.scriptsList.setEnabled(False)
-
+                self.devInfoButton.setEnabled(False)
         else:
+            # Stop Worker
             self.worker.stop()
-            #self.scan_usb()
 
-    def on_finish(self, msg):
+    def on_finish(self, msg, done):
         self.textEdit.append(msg)
         self.startButton.setText(" Start")
         self.startButton.setIcon(QIcon.fromTheme("media-playback-start"))
         self.scanButton.setEnabled(True)
-        self.openButton.setEnabled(True)
-        self.deviceBox.setEnabled(True)
         self.scriptsList.setEnabled(True)
-        #self.scan_usb()
-        self.hotplug.start()
+        self.openButton.setEnabled(True)
+        if done:
+            self.deviceBox.clear()
+            self.startButton.setEnabled(False)
+        else:
+            self.scan_usb()
 
     def on_exit_button_clicked(self):
         self.close()
