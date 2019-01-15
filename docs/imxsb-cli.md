@@ -1,14 +1,13 @@
-i.MX SmartBoot Tool
-===================
+i.MX SmartBoot Tool - CLI
+=========================
 
-### The Command Line Interface
-
-For printing a general info of its usage just execute `imxsb_cli.py -h` inside shell terminal.
+Following description of i.MX SmartBoot Tool is focusing to its implementation with standard Command Line Interface (CLI).
+For printing a general info of it usage just execute `imxsb-cli.py` with argument `-h` or `--help` inside shell terminal.
 
 ```sh
-$ imxsb_cli.py -h
+$ imxsb-cli.py -h
 
-usage: imxsb_cli.py [-h] [-i] [-s INDEX] [-p] [-v] smx_file
+usage: imxsb-cli.py [-h] [-i] [-s INDEX] [-q] [-v] smx_file
 
 positional arguments:
   smx_file              path to *.smx file
@@ -18,16 +17,16 @@ optional arguments:
   -i, --info            print SMX file info and exit
   -s INDEX, --script INDEX
                         select script by its index
-  -p, --progress        show progressbar
+  -q, --quiet           no progressbar
   -v, --version         show program's version number and exit
 ```
 
-The user guide how to create input file for i.MX SmartBoot tool is in following link: [SMX file](smx_file.md)
+The user guide how to create input file for i.MX SmartBoot tool is here: [SMX file](smx_file.md)
 
 #### Print SMX file info and exit
 
 ```sh
- $ imxsb_cli.py -i example.smx
+ $ imxsb-cli.py -i example.smx
 
  0) InitRAMFS Boot (Boot from RAMDisk image)
  1) Network Boot 0 (Mount RootFS via NFS)
@@ -37,7 +36,7 @@ The user guide how to create input file for i.MX SmartBoot tool is in following 
 #### Start boot
 
 ```sh
- $ imxsb_cli.py example.smx
+ $ imxsb-cli.py example.smx
 
  DEVICE: SE Blank ULT1 (0x15A2, 0x0076)
 

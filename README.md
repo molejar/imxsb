@@ -16,7 +16,14 @@ Later will be added support for on the fly sign and encryption of loaded boot im
 
 * i.MX Code Signing Data (CSF)
 
+All of this is complemented by user-friendly graphical interface with minimal complexity.
+
+<p align="center">
+  <img src="docs/images/imxsb_gtkui_run.png" alt="i.MX SmartBoot Tool GUI: Main window"/>
+</p>
+
 > This project is still in developing phase. Please, test it and report founded issues.
+
 
 Dependencies
 ------------
@@ -48,19 +55,19 @@ In case of development clone this repo into your PC and install all dependencies
     $ pip install -r requirements.txt
 ```
 
-For running `imxsb_wxui.py` install `wxPython` package:
+For running `imxsb-wxui.py` install `wxPython` package:
 
 ``` bash
     $ pip install wxPython
 ```
 
-For running `imxsb_qtui.py` install `PyQT5` package:
+For running `imxsb-qtui.py` install `PyQT5` package:
 
 ``` bash
     $ pip install PyQT5
 ```
 
-For running `imxsb_gtkui.py` install `PyGObject` package:
+For running `imxsb-gtkui.py` install `PyGObject` package:
 
 ``` bash
     $ pip install PyGObject
@@ -73,8 +80,8 @@ Usage
 
 The i.MX SmartBoot tool is available int two variants:
 
-* [imxsb_cli](docs/imxsb_cli.md) - with standard command line interface
-* [imxsb_gui](docs/imxsb_gui.md) - with user friendly graphical interface
+* [imxsb-cli](docs/imxsb-cli.md) - with standard command line interface
+* [imxsb-gui](docs/imxsb-gui.md) - with user friendly graphical interface
 
 > Linux users can get into device permission issue if run i.MX SmartBoot tool without root privileges (sudo).
 To fix this problem install udev rules distributed with [pyIMX](https://github.com/molejar/pyIMX) package.
