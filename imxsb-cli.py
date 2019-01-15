@@ -19,9 +19,9 @@ import core
 ########################################################################################################################
 class ProgressBar(object):
 
-    def __init__(self, range=100, nbars=30, prefix='', file=sys.stderr):
+    def __init__(self, total=100, nbars=30, prefix='', file=sys.stderr):
         self.file = file
-        self.total = range
+        self.total = total
         self.nbars = nbars
         self.prefix = prefix
         self.disabled = False
@@ -83,8 +83,8 @@ def main():
                         help='print SMX file info and exit')
     parser.add_argument('-s', '--script', dest='index', type=int, default=100,
                         help='select script by its index')
-    parser.add_argument('-p', '--progress', dest='show_progress', action='store_true',
-                        help='show progressbar')
+    parser.add_argument('-q', '--quiet', dest='quiet', action='store_true',
+                        help='no progressbar')
     parser.add_argument('-v', '--version', action='version', version=core.__version__)
 
     results = parser.parse_args()
@@ -152,12 +152,12 @@ def main():
 
         try:
             # connect target
-            if results.show_progress:
-                flasher.open(progress_handler)
-                flasher.pg_resolution = 20
-            else:
+            if results.quiet:
                 flasher.open()
                 bar.disabled = True
+            else:
+                flasher.open(progress_handler)
+                flasher.pg_resolution = 20
 
             # load script
             script = smx.get_script(script_index)
