@@ -138,7 +138,6 @@ class MainWindow(Gtk.Window):
         # device selection drop-box
         self.devices_name = Gtk.ListStore(str)
         self.devices_box = Gtk.ComboBox.new_with_model(self.devices_name)
-        #self.devices_box.connect("changed", self.on_device_selection_changed)
         renderer_text = Gtk.CellRendererText()
         self.devices_box.pack_start(renderer_text, True)
         self.devices_box.add_attribute(renderer_text, "text", 0)
@@ -250,7 +249,7 @@ class MainWindow(Gtk.Window):
         # self.hotplug.attach(self.scan_usb)
         # self.hotplug.start()
         # TODO: Fix USB hot-plug
-        self.scan_usb
+        self.scan_usb()
 
     ####################################################################################################################
     # Helper methods
@@ -300,9 +299,6 @@ class MainWindow(Gtk.Window):
     ####################################################################################################################
     # Buttons callback methods
     ####################################################################################################################
-    def on_device_selection_changed(self, devices_box):
-        print(devices_box.get_active())
-
     def on_scan_button_clicked(self, widget):
         self.scan_usb()
 
@@ -384,6 +380,7 @@ class MainWindow(Gtk.Window):
                 self.start_button.set_image(Gtk.Image(stock=Gtk.STOCK_MEDIA_STOP))
                 self.scan_button.set_sensitive(False)
                 self.open_button.set_sensitive(False)
+                self.info_button.set_sensitive(False)
                 self.devices_box.set_sensitive(False)
                 self.treeview.set_sensitive(False)
         else:
@@ -399,7 +396,7 @@ class MainWindow(Gtk.Window):
         self.treeview.set_sensitive(True)
         if done:
             self.devices_name.clear()
-            self.start_button.set_sensitive(True)
+            self.start_button.set_sensitive(False)
         else:
             self.scan_usb()
 

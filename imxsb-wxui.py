@@ -377,9 +377,9 @@ class MainWindow(wx.Frame):
                 self.start_button.SetLabel("Stop")
                 self.scan_button.Enable(False)
                 self.open_button.Enable(False)
+                self.info_button.Enable(False)
                 self.devices_box.Enable(False)
                 self.scriptList.Enable(False)
-                self.info_button.Enable(False)
         else:
             # Stop Worker
             self.worker.stop()
