@@ -4,5 +4,6 @@ click>=6.0
 uboot>=0.1.0
 PyYAML>=3.10
 Jinja2>=2.6
+pyudev>=0.21.0; platform_system == 'Linux'
 pyusb>=1.0.0b2; platform_system == 'Linux'
 pywinusb>=0.4.0; platform_system == 'Windows'

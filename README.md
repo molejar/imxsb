@@ -16,7 +16,7 @@ Later will be added support for on the fly sign and encryption of loaded boot im
 
 * i.MX Code Signing Data (CSF)
 
-All of this is complemented by user-friendly graphical interface with minimal complexity.
+All of this is complemented by user-friendly graphical interface.
 
 <p align="center">
   <img src="docs/images/imxsb_gtkui_run.png" alt="i.MX SmartBoot Tool GUI: Main window"/>
