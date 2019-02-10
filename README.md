@@ -55,6 +55,14 @@ In case of development clone this repo into your PC and install all dependencies
     $ pip install -r requirements.txt
 ```
 
+For running `imxsb-tkui.py` with modern face install `ttkthemes` package:
+
+``` bash
+    $ pip install ttkthemes
+```
+
+> You can run `imxsb-tkui.py` without this package, but the window will look like from Win98 era.
+
 For running `imxsb-wxui.py` install `wxPython` package:
 
 ``` bash
@@ -78,7 +86,7 @@ For running `imxsb-gtkui.py` install `PyGObject` package:
 Usage
 -----
 
-The i.MX SmartBoot tool is available int two variants:
+The i.MX SmartBoot tool is available in two variants:
 
 * [imxsb-cli](docs/imxsb-cli.md) - with standard command line interface
 * [imxsb-gui](docs/imxsb-gui.md) - with user friendly graphical interface

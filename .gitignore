@@ -8,6 +8,8 @@ venv
 temp
 
 # files
+Pipfile
+Pipfile.lock
 *.pyc
 *.bin
 *.imx
