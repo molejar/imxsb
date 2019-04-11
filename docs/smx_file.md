@@ -81,7 +81,7 @@ value must be defined in some of this two places. If is defined on both then the
 
 This data segments contains a data which generally initialize the SoC periphery for DDR memory. More details about DCD 
 are in reference manual of selected IMX device. The data itself can be specified as binary file or text string/file. The 
-text format of DCD data is described here: [imxim](imxim.md)
+text format of DCD data is described here: [imxim](https://github.com/molejar/pyIMX/blob/master/doc/imxim.md#dcd-file)
 
 Example of *DCD* data segments in binary and text format:
 
