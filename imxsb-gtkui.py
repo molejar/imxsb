@@ -263,7 +263,7 @@ class MainWindow(Gtk.Window):
         self.devices = imx.sdp.scan_usb(self.target)
         if self.devices:
             for dev in self.devices:
-                self.devices_name.append([dev.usbd.info])
+                self.devices_name.append([dev.usbd.info()])
             self.devices_box.set_active(0)
             self.devices_box.set_sensitive(True)
             self.info_button.set_sensitive(True)

@@ -250,7 +250,7 @@ class MainWindow(QFrame):
         self.deviceBox.clear()
         if self.devices:
             for dev in self.devices:
-                self.deviceBox.addItem(dev.usbd.info)
+                self.deviceBox.addItem(dev.usbd.info())
             self.deviceBox.setCurrentIndex(0)
             self.deviceBox.setEnabled(True)
             self.devInfoButton.setEnabled(True)

@@ -260,7 +260,7 @@ class MainWindow(wx.Frame):
         self.devices = imx.sdp.scan_usb(self.target)
         if self.devices:
             for dev in self.devices:
-                self.devices_box.Append([dev.usbd.info])
+                self.devices_box.Append([dev.usbd.info()])
             self.devices_box.SetSelection(0)
             self.devices_box.Enable(True)
             self.info_button.Enable(True)

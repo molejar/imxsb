@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 Martin Olejar
+# Copyright (c) 2017-2019 Martin Olejar
 #
 # SPDX-License-Identifier: BSD-3-Clause
 # The BSD-3-Clause license for this file can be found in the LICENSE file included with this distribution
@@ -14,15 +14,12 @@ import jinja2
 from .segments import DatSegFDT, DatSegDCD, DatSegIMX2, DatSegIMX2B, DatSegIMX3, DatSegRAW, DatSegUBI, \
                       DatSegUBX, DatSegUBT
 
-CHIPS = list(imx.sdp.SdpMX8.DEVICES.keys()) + \
-        list(imx.sdp.SdpMX67.DEVICES.keys()) + \
-        list(imx.sdp.SdpMXRT.DEVICES.keys())
-
 
 def fmt_size(num, kibibyte=True):
-    base, suffix = [(1000.,'B'),(1024.,'iB')][kibibyte]
+    base, suffix = [(1000., 'B'), (1024., 'iB')][kibibyte]
     for x in ['B'] + [x + suffix for x in list('kMGTP')]:
-        if -base < num < base: break
+        if -base < num < base:
+            break
         num /= base
     return "{0:3.1f} {1:s}".format(num, x)
 
@@ -263,10 +260,11 @@ class SmxFile(object):
 
     def open(self, file, auto_load=False):
         """ Open core file
-        :param file -
+        :param file:
+        :param auto_load:
         :return
         """
-        assert isinstance(file, str), ""
+        assert isinstance(file, str)
 
         # open core file
         with open(file, 'r') as f:
@@ -296,9 +294,9 @@ class SmxFile(object):
 
         # parse header segments
         if "CHIP" not in smx_data['HEAD']:
-            raise Exception("CHIP type not defined in HEAD segments")
-        if smx_data['HEAD']['CHIP'] not in CHIPS:
-            raise Exception("CHIP type not defined in HEAD segments")
+            raise Exception("CHIP not defined in HEAD segments")
+        if smx_data['HEAD']['CHIP'] not in imx.sdp.supported_devices():
+            raise Exception("Device type not supported !")
         self._name = smx_data['HEAD']['NAME'] if 'NAME' in smx_data['HEAD'] else ""
         self._description = smx_data['HEAD']['DESC'] if 'DESC' in smx_data['HEAD'] else ""
         self._platform = smx_data['HEAD']['CHIP']

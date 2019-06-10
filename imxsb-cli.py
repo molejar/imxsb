@@ -120,14 +120,14 @@ def main():
             i = 0
             print('')
             for dev in devices:
-                print(" %d) %s" % (i, dev.usbd.info))
+                print(" %d) %s" % (i, dev.usbd.info()))
                 i += 1
             print("\n Select target device: ", end='', flush=True)
             c = input()
             print()
             device_index = int(c, 10)
 
-        print("\n DEVICE: %s\n" % devices[device_index].usbd.info)
+        print("\n DEVICE: %s\n" % devices[device_index].usbd.info())
         flasher = devices[device_index]
 
         if len(smx.scripts) == 1:

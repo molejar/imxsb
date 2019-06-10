@@ -235,7 +235,7 @@ class MainWindow(Tk):
         self.devices = imx.sdp.scan_usb(self.target)
         if self.devices:
             self.devices_box.state(['!disabled'])
-            self.devices_box['values'] = [dev.usbd.info for dev in self.devices]
+            self.devices_box['values'] = [dev.usbd.info() for dev in self.devices]
             self.devices_box.current(0)
             self.info_button.state(['!disabled'])
             if self.target is not None:
